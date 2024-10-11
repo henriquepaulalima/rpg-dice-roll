@@ -1,0 +1,27 @@
+@import '/src/assets/styles/variables';
+
+.header__container {
+  height: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  column-gap: 15px;
+  background-color: $dark_blue;
+  padding: 0 1.5rem;
+  transition: .25s ease-in-out;
+
+  svg {
+    font-size: 2rem;
+    color: $white;
+  }
+
+  button {
+    color: $white;
+
+    &.active {
+      background-color: $light_blue;
+      border: none;
+    }
+  }
+}

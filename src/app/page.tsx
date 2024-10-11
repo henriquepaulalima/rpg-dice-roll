@@ -5,18 +5,29 @@ import styles from './page.module.scss';
 import { useEffect, useState } from 'react';
 import {
   Backdrop,
-  Box,
   Button,
   ButtonGroup,
   Fade,
   Modal,
-  Typography,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faDice, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAnglesDown,
+  faAnglesUp,
+  faClose,
+  faDice,
+  faTrashCan,
+} from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
 
 export default function Home() {
   const [number, setNumber] = useState<number>(0);
+  const [diceColor, setDiceColor] = useState<DiceColor | null>(null);
+  const [buffs, setBuffs] = useState<Buffs | null>(Buffs.BUFF);
+  const [buffsValue, setBuffsValues] = useState<number | string>('');
   const [history, setHistory] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -30,8 +41,48 @@ export default function Home() {
     }
   }, []);
 
+  const handleBuffs = (
+    event: React.MouseEvent<HTMLElement>,
+    newBuffs: Buffs | null
+  ) => {
+    setBuffs(newBuffs);
+  };
+
+  const handleBuffsValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue =
+      event.target.value === '' ? '' : parseFloat(event.target.value);
+
+    setBuffsValues(newValue);
+  };
+
   const roll = () => {
-    const random = Math.floor(Math.random() * (100 - 1) + 1);
+    let random = Math.floor(Math.random() * (100 - 1) + 1);
+
+    if (buffsValue) {
+      switch (buffs) {
+        case Buffs.BUFF:
+          random = random + Number(buffsValue);
+          if (random > 100) random = 100;
+          break;
+        case Buffs.DEBUFF:
+          random = random - Number(buffsValue);
+          if (random < 1) random = 1;
+          break;
+        default:
+      }
+    }
+
+    if (random <= 40) {
+      setDiceColor(DiceColor.RED);
+    } else if (random >= 41 && random <= 50) {
+      setDiceColor(DiceColor.BLACK);
+    } else if (random >= 51 && random <= 75) {
+      setDiceColor(DiceColor.GREEN);
+    } else if (random >= 76 && random <= 80) {
+      setDiceColor(DiceColor.GOLD);
+    } else if (random >= 81) {
+      setDiceColor(DiceColor.BLUE);
+    }
 
     setNumber(random);
 
@@ -96,7 +147,14 @@ export default function Home() {
               <div className={styles.d100__roll_history_modal_list}>
                 {history.map((item, index) => (
                   <div
-                    className={styles.d100__roll_history_modal_list_item}
+                    className={classNames({
+                      [styles.d100__roll_history_modal_list_item]: true,
+                      [styles.red]: item <= 40,
+                      [styles.black]: item >= 41 && item <= 50,
+                      [styles.green]: item >= 51 && item <= 75,
+                      [styles.gold]: item >= 76 && item <= 80,
+                      [styles.blue]: item >= 81,
+                    })}
                     key={index}
                   >
                     <p>{item}</p>
@@ -108,12 +166,73 @@ export default function Home() {
         </Modal>
       </div>
       <div className={styles.d100__roll_container}>
-        <p>{number}</p>
+        <div
+          className={classNames({
+            [styles.d100__roll_result]: true,
+            [styles.red]: diceColor === 0,
+            [styles.black]: diceColor === 1,
+            [styles.green]: diceColor === 2,
+            [styles.gold]: diceColor === 3,
+            [styles.blue]: diceColor === 4,
+          })}
+        >
+          <p>{number}</p>
+        </div>
         <Button onClick={roll} variant='contained'>
           Roll
           <FontAwesomeIcon icon={faDice} />
         </Button>
+        <div className={styles.d100__roll_buffs_container}>
+          <ToggleButtonGroup
+            value={buffs}
+            exclusive
+            onChange={handleBuffs}
+            aria-label='Buff and Debuff'
+            className={styles.d100__roll_buffs_select}
+          >
+            <ToggleButton
+              className={classNames({
+                [styles.button_buff]: buffs === Buffs.BUFF,
+              })}
+              value={Buffs.BUFF}
+              aria-label='Buff'
+            >
+              D <FontAwesomeIcon icon={faAnglesUp} />
+            </ToggleButton>
+            <ToggleButton
+              className={classNames({
+                [styles.button_debuff]: buffs === Buffs.DEBUFF,
+              })}
+              value={Buffs.DEBUFF}
+              aria-label='Debuff'
+            >
+              D <FontAwesomeIcon icon={faAnglesDown} />
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <TextField
+            value={buffsValue}
+            onChange={handleBuffsValue}
+            InputProps={{ inputProps: { min: 1, max: 75 } }}
+            type='number'
+            id='outlined-basic'
+            label='Value'
+            variant='outlined'
+          />
+        </div>
       </div>
     </main>
   );
+}
+
+enum DiceColor {
+  RED,
+  BLACK,
+  GREEN,
+  GOLD,
+  BLUE,
+}
+
+enum Buffs {
+  BUFF,
+  DEBUFF,
 }

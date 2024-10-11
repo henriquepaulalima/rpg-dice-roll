@@ -23,11 +23,46 @@
     justify-content: center;
     align-items: center;
 
-    p {
-      font-size: 5rem;
-      font-weight: 600;
-      color: $dark_blue;
-      padding-bottom: 1rem;
+    .d100__roll_result {
+      height: 7rem;
+      width: 9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+
+      &.red {
+        background-color: $dice_red;
+      }
+
+      &.black {
+        background-color: $dark_grey;
+
+        p {
+          color: $white;
+        }
+      }
+
+      &.green {
+        background-color: $dice_green;
+      }
+
+      &.gold {
+        background-color: $dice_gold;
+      }
+
+      &.blue {
+        background-color: $dice_blue;
+      }
+
+      p {
+        font-size: 5rem;
+        font-weight: 600;
+        color: $dark_blue;
+      }
     }
 
     button {
@@ -36,6 +71,28 @@
 
       svg {
         padding-left: .5rem;
+      }
+    }
+
+    .d100__roll_buffs_container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-top: 1rem;
+
+      .d100__roll_buffs_select {
+        height: 100%;
+        margin-right: .5rem;
+
+        .button_buff {
+          background-color: $buff;
+          color: $white;
+        }
+
+        .button_debuff {
+          background-color: $debuff;
+          color: $white;
+        }
       }
     }
   }
@@ -59,6 +116,7 @@
   }
 
   .d100__roll_history_modal_title {
+    height: 3rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -76,21 +134,55 @@
   }
 
   .d100__roll_history_modal_list {
+    max-height: calc(75dvh - 3rem);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     column-gap: 10px;
     row-gap: 10px;
+    overflow-y: auto;
+    scrollbar-width: none;
     padding-top: 1rem;
 
     .d100__roll_history_modal_list_item {
       flex: 1 0 30%;
       border: none;
       border-radius: 7px;
-      background-color: $dark_blue;
       color: $white;
       text-align: center;
       padding: .5rem 0;
+
+      &.red {
+        background-color: $dice_red;
+
+        p {
+          color: $white;
+        }
+      }
+
+      &.black {
+        background-color: $dark_grey;
+
+        p {
+          color: $white;
+        }
+      }
+
+      &.green {
+        background-color: $dice_green;
+      }
+
+      &.gold {
+        background-color: $dice_gold;
+      }
+
+      &.blue {
+        background-color: $dice_blue;
+      }
+
+      p {
+        color: $dark_grey;
+      }
     }
   }
 }

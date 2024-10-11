@@ -4,56 +4,15 @@
   height: calc(100dvh - 5rem);
   display: flex;
   flex-direction: column;
-  background-color: $light_blue;
+  background-color: $white;
 
   .d100__roll_history {
     display: flex;
     flex-direction: column;
     padding: 1rem;
 
-    .d100__roll_history_title {
-      display: flex;
+    @media (min-width: 1024px) {
       flex-direction: row;
-      align-items: center;
-
-      h2 {
-        font-size: 2rem;
-        font-weight: 600;
-        color: $dark_blue;
-        padding-right: 1rem;
-      }
-
-      button svg {
-        padding-left: .5rem;
-      }
-    }
-
-    .d100__roll_history_list {
-      min-height: 3rem;
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: wrap;
-      padding: 1rem 0;
-
-      .d100__roll_history_item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        p {
-          font-size: 1rem;
-          font-weight: 500;
-          color: $dark_blue;
-          padding-right: 1rem;
-
-          &:nth-child(odd) {
-            font-size: 1.5;
-            font-weight: 600;
-          }
-        }
-      }
     }
   }
 
@@ -78,6 +37,60 @@
       svg {
         padding-left: .5rem;
       }
+    }
+  }
+}
+
+.d100__roll_history_modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 75dvh;
+  width: 75vw;
+  border: none;
+  border-radius: 15px;
+  background-color: $white;
+  font-family: 'Inter', sans-serif;
+  transform: translate(-50%, -50%);
+  padding: 1.5rem;
+
+  @media (min-width: 1024px) {
+    width: 30vw;
+  }
+
+  .d100__roll_history_modal_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $dark_grey;
+    }
+
+    button:nth-child(1) svg {
+      padding-left: .5rem;
+    }
+  }
+
+  .d100__roll_history_modal_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 10px;
+    padding-top: 1rem;
+
+    .d100__roll_history_modal_list_item {
+      flex: 1 0 30%;
+      border: none;
+      border-radius: 7px;
+      background-color: $dark_blue;
+      color: $white;
+      text-align: center;
+      padding: .5rem 0;
     }
   }
 }

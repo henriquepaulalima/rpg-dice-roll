@@ -25,9 +25,10 @@ import classNames from 'classnames';
 
 export default function Home() {
   const [number, setNumber] = useState<number>(0);
-  const [diceColor, setDiceColor] = useState<DiceColor | null>(null);
-  const [buffs, setBuffs] = useState<Buffs | null>(Buffs.BUFF);
-  const [buffsValue, setBuffsValues] = useState<number | string>('');
+  const [random, setRandom] = useState<number>(0);
+  const [diceColor, setDiceColor] = useState<DiceColor>(DiceColor.RED);
+  const [buffs, setBuffs] = useState<Buffs>(Buffs.BUFF);
+  const [buffsValue, setBuffsValues] = useState<number>(0);
   const [history, setHistory] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -41,53 +42,53 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (buffsValue !== 0) {
+      if (buffs === Buffs.BUFF) {
+        setNumber(random + Number(buffsValue));
+        if (random > 100) setNumber(100);
+      } else {
+        setNumber(random - Number(buffsValue));
+        if (random < 1) setNumber(1);
+      }
+    } else {
+      setNumber(random);
+    }
+  }, [random]);
+
+  useEffect(() => {
+    if (number <= 40) {
+      setDiceColor(DiceColor.RED);
+    } else if (number >= 41 && number <= 50) {
+      setDiceColor(DiceColor.BLACK);
+    } else if (number >= 51 && number <= 75) {
+      setDiceColor(DiceColor.GREEN);
+    } else if (number >= 76 && number <= 80) {
+      setDiceColor(DiceColor.GOLD);
+    } else if (number >= 81) {
+      setDiceColor(DiceColor.BLUE);
+    }
+
+    history.push(number);
+    saveHistory();
+  }, [number]);
+
   const handleBuffs = (
     event: React.MouseEvent<HTMLElement>,
-    newBuffs: Buffs | null
+    newBuffs: Buffs
   ) => {
     setBuffs(newBuffs);
   };
 
   const handleBuffsValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue =
-      event.target.value === '' ? '' : parseFloat(event.target.value);
+    const newValue = parseFloat(event.target.value);
 
     setBuffsValues(newValue);
   };
 
   const roll = () => {
-    let random = Math.floor(Math.random() * (100 - 1) + 1);
-
-    if (buffsValue) {
-      switch (buffs) {
-        case Buffs.BUFF:
-          random = random + Number(buffsValue);
-          if (random > 100) random = 100;
-          break;
-        case Buffs.DEBUFF:
-          random = random - Number(buffsValue);
-          if (random < 1) random = 1;
-          break;
-        default:
-      }
-    }
-
-    if (random <= 40) {
-      setDiceColor(DiceColor.RED);
-    } else if (random >= 41 && random <= 50) {
-      setDiceColor(DiceColor.BLACK);
-    } else if (random >= 51 && random <= 75) {
-      setDiceColor(DiceColor.GREEN);
-    } else if (random >= 76 && random <= 80) {
-      setDiceColor(DiceColor.GOLD);
-    } else if (random >= 81) {
-      setDiceColor(DiceColor.BLUE);
-    }
-
-    setNumber(random);
-
-    history.push(random);
-    saveHistory();
+    const randomValue = Math.floor(Math.random() * (100 - 1) + 1);
+    setRandom(randomValue);
   };
 
   const saveHistory = () => {
@@ -166,17 +167,37 @@ export default function Home() {
         </Modal>
       </div>
       <div className={styles.d100__roll_container}>
-        <div
-          className={classNames({
-            [styles.d100__roll_result]: true,
-            [styles.red]: diceColor === 0,
-            [styles.black]: diceColor === 1,
-            [styles.green]: diceColor === 2,
-            [styles.gold]: diceColor === 3,
-            [styles.blue]: diceColor === 4,
-          })}
-        >
-          <p>{number}</p>
+        <div className={styles.d100_roll_result_container}>
+          <div className={styles.d100_roll_result_raw_container}>
+            <div
+              className={classNames({
+                [styles.d100__roll_buff_result]: true,
+                [styles.buff]: buffs === Buffs.BUFF,
+                [styles.debuff]: buffs === Buffs.DEBUFF,
+              })}
+            >
+              <FontAwesomeIcon
+                icon={buffs === Buffs.BUFF ? faAnglesUp : faAnglesDown}
+              />
+              <p>{buffsValue ? buffsValue : 0}</p>
+            </div>
+            <div className={styles.d100__roll_raw_dice_result}>
+              <FontAwesomeIcon icon={faDice} />
+              <p>{random}</p>
+            </div>
+          </div>
+          <div
+            className={classNames({
+              [styles.d100__roll_result]: true,
+              [styles.red]: diceColor === 0,
+              [styles.black]: diceColor === 1,
+              [styles.green]: diceColor === 2,
+              [styles.gold]: diceColor === 3,
+              [styles.blue]: diceColor === 4,
+            })}
+          >
+            <p>{number}</p>
+          </div>
         </div>
         <Button onClick={roll} variant='contained'>
           Roll
@@ -212,7 +233,7 @@ export default function Home() {
           <TextField
             value={buffsValue}
             onChange={handleBuffsValue}
-            InputProps={{ inputProps: { min: 1, max: 75 } }}
+            InputProps={{ inputProps: { min: 0, max: 75 } }}
             type='number'
             id='outlined-basic'
             label='Value'

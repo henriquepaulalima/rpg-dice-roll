@@ -23,45 +23,113 @@
     justify-content: center;
     align-items: center;
 
-    .d100__roll_result {
-      height: 7rem;
-      width: 9rem;
+    .d100_roll_result_container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
-      border: none;
-      border-radius: 15px;
       margin-bottom: 2rem;
 
-      &.red {
-        background-color: $dice_red;
-      }
+      .d100_roll_result_raw_container {
+        display: flex;
+        flex-direction: column;
 
-      &.black {
-        background-color: $dark_grey;
+        .d100__roll_buff_result {
+          height: 2.5rem;
+          width: 5rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-evenly;
+          align-items: center;
+          background-color: $light_blue;
+          border-right: 5px solid $dark_grey;
+          border-top-left-radius: 15px;
 
-        p {
-          color: $white;
+          &.buff {
+            background-color: $buff;
+          }
+
+          &.debuff {
+            background-color: $debuff;
+          }
+
+          svg {
+            font-size: 1.25rem;
+            color: $white;
+            padding-right: .5rem;
+          }
+
+          p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: $white;
+          }
+        }
+
+        .d100__roll_raw_dice_result {
+          height: 2.5rem;
+          width: 5rem;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-evenly;
+          align-items: center;
+          background-color: $light_blue;
+          border-right: 5px solid $dark_grey;
+          border-bottom-left-radius: 15px;
+
+          svg {
+            font-size: 1.25rem;
+            color: $white;
+            padding-right: .5rem;
+          }
+
+          p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: $white;
+          }
         }
       }
 
-      &.green {
-        background-color: $dice_green;
-      }
+      .d100__roll_result {
+        height: 7rem;
+        width: 9rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        border-radius: 15px;
 
-      &.gold {
-        background-color: $dice_gold;
-      }
+        &.red {
+          background-color: $dice_red;
+        }
 
-      &.blue {
-        background-color: $dice_blue;
-      }
+        &.black {
+          background-color: $dark_grey;
 
-      p {
-        font-size: 5rem;
-        font-weight: 600;
-        color: $dark_blue;
+          p {
+            color: $white;
+          }
+        }
+
+        &.green {
+          background-color: $dice_green;
+        }
+
+        &.gold {
+          background-color: $dice_gold;
+        }
+
+        &.blue {
+          background-color: $dice_blue;
+        }
+
+        p {
+          font-size: 5rem;
+          font-weight: 600;
+          color: $dark_blue;
+        }
       }
     }
 
